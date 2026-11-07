@@ -1,0 +1,58 @@
+# @package _global_
+# Latent-space counterpart of noapp_learntcpl_var: CPL prior on SD-VAE latents with cosine-annealed l1-target -> diffusion handover; motion frozen at RAFT init.
+defaults:
+  - override /regularizer_fn: composite_motion_appearance_coupling_cpl_latent
+
+optimizer:
+  occlusion_lr: 0.1
+  lr: 0.1
+  motion_lr: 0.0   # motion frozen at the RAFT init
+
+model_initializer:
+  motion_init: "raft"
+
+regularizer_fn:
+  motion_regularizer:
+    weight: 0.0  # inert anyway with motion_lr 0
+    loss_norm: l1
+
+  coupling_regularizer:
+    forward_fn_params:
+      use_final_model: true
+      use_epoch : null
+      use_pass_through: false
+      model_type: UNet2DCondition
+
+    reg_params:
+      weight : 0.0
+
+    reg_params_var_spec:
+      num_train_steps_factor_lower : 0.0
+      num_train_steps_factor_upper : 0.4
+      adapt_reg_strength: true
+      include_backward : true
+      occlusion_weight : 1.0
+      occlusion_fwd_relative : 1.0
+      occlusion_bwd_relative : 1.0
+      tau_pix : 1.0
+      conf_floor : 0.0
+      enable_occlusion_masking : false
+      apply_scaling_factor_from_setup: False  # VAE encodes the scaled measurement video instead of [0,1] pixels
+      use_sin_cos_annealing: True
+      normalization: "none"
+      target_l1_weight: 0.0008
+
+  appearance_regularizer:
+    img_x_tv_weight: 0.0
+    norm_order_temporal: 1
+    use_confidence_weights_for_tv: False
+
+trainer:
+  scheduler_kwargs:
+    patience: 50
+  gradient_acc_steps: 1
+  iterations: 400
+
+sweep:
+  ++regularizer_fn.coupling_regularizer.reg_params.weight: [1e0,1e-8]
+  ++regularizer_fn.coupling_regularizer.reg_params_var_spec.target_l1_weight: [1e0,1e-8]

@@ -1,0 +1,20 @@
+task_runner: ray
+ray_address: null
+
+data_cache_root: ???
+data_manual_root: ???
+
+prefect:
+  api_url: ???
+
+minio:
+  endpoint_url: ???
+  access_key: ???
+  secret_key: ???
+
+wandb:
+  log: True
+  log_artifact: True
+  project: ???
+  entity: ???
+  code_dir: ./

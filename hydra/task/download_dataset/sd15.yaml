@@ -1,0 +1,56 @@
+defaults:
+  - base
+  - _self_
+
+# Stable Diffusion v1.5 (community mirror of runwayml/stable-diffusion-v1-5), ~4.3 GB; used offline from model_cache.
+dataset_name: sd15
+target_dir: model_cache/sd15
+mode: url
+source: https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5
+files:
+  - key: vae/config.json
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/vae/config.json"
+    checksum: null
+  - key: vae/diffusion_pytorch_model.safetensors
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/vae/diffusion_pytorch_model.safetensors"
+    size: 334643276
+    checksum: "sha256:a2b5134f4dbc140d9c11f11cba3233099e00af40f262f136c691fb7d38d2194c"
+  - key: unet/config.json
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/unet/config.json"
+    checksum: null
+  - key: unet/diffusion_pytorch_model.safetensors
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/unet/diffusion_pytorch_model.safetensors"
+    size: 3438167540
+    checksum: "sha256:19da7aaa4b880e59d56843f1fcb4dd9b599c28a1d9d9af7c1143057c8ffae9f1"
+  - key: scheduler/scheduler_config.json
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/scheduler/scheduler_config.json"
+    checksum: null
+  - key: text_encoder/config.json
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/text_encoder/config.json"
+    checksum: null
+  - key: text_encoder/model.safetensors
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/text_encoder/model.safetensors"
+    size: 492265874
+    checksum: "sha256:d008943c017f0092921106440254dbbe00b6a285f7883ec8ba160c3faad88334"
+  - key: tokenizer/merges.txt
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/tokenizer/merges.txt"
+    checksum: null
+  - key: tokenizer/vocab.json
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/tokenizer/vocab.json"
+    checksum: null
+  - key: tokenizer/tokenizer_config.json
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/tokenizer/tokenizer_config.json"
+    checksum: null
+  - key: tokenizer/special_tokens_map.json
+    url: "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/tokenizer/special_tokens_map.json"
+    checksum: null
+download_parallel_files: 4
+download_connections_per_file: 8
+expected_layout:
+  - {glob: "vae/config.json", min_count: 1}
+  - {glob: "vae/diffusion_pytorch_model.safetensors", min_count: 1}
+  - {glob: "unet/config.json", min_count: 1}
+  - {glob: "unet/diffusion_pytorch_model.safetensors", min_count: 1}
+  - {glob: "scheduler/scheduler_config.json", min_count: 1}
+  - {glob: "text_encoder/model.safetensors", min_count: 1}
+  - {glob: "tokenizer/vocab.json", min_count: 1}

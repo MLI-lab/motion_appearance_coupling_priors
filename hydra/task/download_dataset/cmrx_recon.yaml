@@ -1,0 +1,15 @@
+defaults:
+  - base
+  - _self_
+
+dataset_name: cmrx_recon
+target_dir: manual/CMRxRecon
+mode: manual
+source: https://cmrxrecon.github.io/
+instructions: >
+  Register for CMRxRecon 2023 and 2024, download the multi-coil cine ChallengeData
+  (TrainingSet/ValidationSet/TestSet FullSample), and place the release trees at
+  <data_manual_root>/CMRxRecon/CMRxRecon2023 and .../CMRxRecon2024.
+expected_layout:
+  - {glob: "CMRxRecon2023/ChallengeData/MultiCoil/Cine/TrainingSet/FullSample/*/cine_sax.mat", min_count: 100}
+  - {glob: "CMRxRecon2024/ChallengeData/MultiCoil/Cine/TrainingSet/FullSample/*/cine_sax.mat", min_count: 100}

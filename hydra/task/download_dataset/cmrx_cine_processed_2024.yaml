@@ -1,0 +1,14 @@
+defaults:
+  - base
+  - _self_
+
+# Preprocessed CMRxRecon 2024 cine test set (.h5 with sensitivity maps), staged by hand.
+dataset_name: cmrx_cine_processed_2024
+target_dir: manual/CMRxRecon/CineProcessed/2024/TestSet
+mode: manual
+source: internal
+instructions: >
+  Copy CineProcessed/2024/TestSet (the preprocessed .h5 cine volumes) to
+  <data_manual_root>/CMRxRecon/CineProcessed/2024/TestSet.
+expected_layout:
+  - {glob: "**/*.h5", min_count: 1}

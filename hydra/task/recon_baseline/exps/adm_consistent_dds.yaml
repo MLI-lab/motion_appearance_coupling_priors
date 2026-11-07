@@ -1,0 +1,49 @@
+# @package _global_
+
+baseline_params:
+  name: svi_baseline
+  model_path: https://openaipublic.blob.core.windows.net/diffusion/jul-2021/256x256_diffusion_uncond.pt
+  cache_dir: model_cache
+
+  noise_mode: "consistent"
+  noise_params: {}
+
+  nfe: 99
+
+  recon_args:
+    clip_denoised: True
+    a: 1.0
+    eta: 1.0
+    cg_n_inner: 5
+    cg_eps: 1e-5
+    eval_every_iters: 5
+  
+  diffusion_args:
+    learn_sigma: True
+    diffusion_steps: 1000
+    noise_schedule: "linear"
+    timestep_respacing: ""
+    use_kl: False
+    predict_xstart: False
+    rescale_timesteps: False
+    rescale_learned_sigmas: False
+  
+  model_args:
+    image_size: 256
+    num_channels: 256
+    num_res_blocks: 2
+    num_heads: 4
+    num_heads_upsample: -1
+    num_head_channels: 64
+    attention_resolutions: "32,16,8"
+    channel_mult: ""
+    dropout: 0.0
+    class_cond: False
+    use_checkpoint: False
+    use_scale_shift_norm: True
+    resblock_updown: True
+    use_fp16: True # let's see if this works
+    use_new_attention_order: False
+
+sweep:
+  ++baseline_params.recon_args.eta: [0.2,1.0]

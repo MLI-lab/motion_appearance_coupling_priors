@@ -1,0 +1,19 @@
+defaults:
+  - base
+  - _self_
+
+# DAVIS 2017 trainval at 480p (90 videos), ~0.8 GB, used as 16-frame 256x256 clips.
+dataset_name: davis_2017
+mode: url
+source: https://davischallenge.org/davis2017/code.html
+files:
+  - key: DAVIS-2017-trainval-480p.zip
+    url: "https://data.vision.ee.ethz.ch/csergi/share/davis/DAVIS-2017-trainval-480p.zip"
+    size: null
+    checksum: null
+    extract: zip
+    strip_prefix: DAVIS   # zip root folder
+expected_layout:
+  - {glob: "JPEGImages/480p/*/00000.jpg", min_count: 90}
+  - {glob: "ImageSets/2017/train.txt", min_count: 1}
+  - {glob: "ImageSets/2017/val.txt", min_count: 1}

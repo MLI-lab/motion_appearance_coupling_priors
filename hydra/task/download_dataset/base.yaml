@@ -1,0 +1,16 @@
+# Base for download configs (src/tasks/download_dataset_task.py). mode url: downloaded into <data_cache_root>/<target_dir>;
+# mode manual: validated under <data_manual_root>. expected_layout globs must match >= min_count entries.
+dataset_name: ???
+target_dir: raw/${dataset_name}
+mode: manual
+source: ""
+instructions: ""
+expected_layout: []
+
+# url mode
+files: []                       # {key, url, size, checksum: "sha256:..."|"md5:..."|null, extract: zip|tar|null, strip_prefix, extract_to} or {key, parts: [...], extract}
+verify_checksums: true
+cleanup_after_extract: true
+download_parallel_files: 2      # files downloaded concurrently
+download_connections_per_file: 8  # HTTP range-request connections per file
+manual_fallback_dir: null       # e.g. manual/${dataset_name}

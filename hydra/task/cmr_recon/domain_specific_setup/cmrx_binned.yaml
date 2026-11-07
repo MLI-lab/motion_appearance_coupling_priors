@@ -1,0 +1,24 @@
+defaults:
+  - base
+
+name: binned_cmr
+
+base_path: manual/CMRxRecon/CineProcessed/2024/TestSet
+
+filter: null
+multicoil: true
+image_only: false
+repeat_cycle: 0
+resolution_interpolation: false
+magnitude_only: false
+undersampling_factor: 2
+sample_mask: True
+mask_type: ktGaussian
+return_fname: false
+num_center_slices: null
+crop_and_downscale_cfg:
+  enabled: false
+  size_before_downscale: [256, 256]
+  size_after_downscale: [128, 128]
+
+video_length_in_s: 1.0

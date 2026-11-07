@@ -1,0 +1,165 @@
+name: recon_and_baseline_tuning_with_pretrained_dms_flow
+required_datasets: [reds, vimeo_septuplet]
+
+train_cpl_enabled: True
+skip_recon: False
+
+download_task_name: download_dataset
+download_config_path: task/download_dataset
+download_config_name: reds
+download_overrides:
+  - ++download_connections_per_file=8
+download_cache_refresh: False
+download_num_gpus: 0
+
+convert_to_video_dataset_task_name: convert_vimeo_to_video_dataset
+convert_to_video_dataset_base_config_path: task/convert_vimeo_to_video_dataset
+convert_to_video_dataset_config_name: config
+convert_to_video_dataset_base_overrides:
+  - ++file_limit=6000
+  - ++torch_mp_process_count=14
+convert_to_video_dataset_task_overrides: {}
+convert_to_video_dataset_cache_refresh: False
+convert_to_video_dataset_num_gpus: 0
+convert_to_video_dataset_cpus_per_task: 14
+
+preprocess_video_dataset_base_config_path: task/preprocess_video_dataset_for_pretraining
+preprocess_video_dataset_train_config_name: vimeo_videovoxel_train
+preprocess_video_dataset_val_config_name: vimeo_videovoxel_test
+preprocess_video_dataset_base_overrides:
+  - ++seed=0
+  - ++store_warp_parameters=true
+  - ++torch_mp_process_count=2
+  - ++crop.size_before_downscale=512
+  - ++crop.size_after_downscale=256
+  - ++crop.enabled=True
+  - ++warp_method_fit.fit_params.num_iterations=0
+preprocess_video_dataset_task_overrides: {}
+preprocess_video_dataset_cache_refresh: False
+preprocess_video_dataset_num_gpus: 2
+
+visualize_base_config_path : task/visualize_vdm_training_dataset
+visualize_base_config_name : config
+visualize_base_overrides:
+  - ++sample_nr=5
+visualize_task_overrides: {}
+visualize_num_gpus: 1
+
+train_cpl_task_name: train_probabilistic_coupling_model
+train_cpl_base_config_path : task/train_probabilistic_coupling
+train_cpl_base_config_name : config
+train_cpl_overrides:
+  - +exps=rgb_model
+train_cpl_task_overrides: {}
+train_cpl_post_overrides:
+  - ++training_steps=200000
+  - ++sample_image.sample_video_every=10
+  - ++sample_image.params.nr_of_image_samples=2
+  - ++sample_image.params.nr_of_image_samples_uploaded_to_wandb=2
+  - ++sample_image.sample_steps=100
+  - ++use_random_noise=True
+  - ++optimizer.lr=5e-4
+train_cpl_cache_refresh: False
+train_cpl_num_gpus: 1
+
+recon_tuning_config_path : task/tuning_selection
+recon_tuning_config_name : config
+recon_tuning_overrides:
+  - ++selection_method=best_overall
+  - ++tune_metric=psnr
+  - ++tune_metric_take_max=True
+  - ++secondary_mode=none
+  - ++secondary_metric=lpips
+  - ++secondary_metric_take_max=False
+  - ++secondary_metric_max_deviation=0.005
+  - ++secondary_soft_penalty_lambda=50.0
+recon_tuning_cache_refresh: False
+recon_tuning_num_gpus: 1
+
+baseline_tuning_config_path : task/tuning_selection
+baseline_tuning_config_name : config
+baseline_tuning_overrides:
+  - ++selection_method=best_overall
+  - ++tune_metric=psnr
+  - ++tune_metric_take_max=True
+  - ++secondary_mode=none
+  - ++secondary_metric=lpips
+  - ++secondary_metric_take_max=False
+  - ++secondary_metric_max_deviation=0.005
+  - ++secondary_soft_penalty_lambda=50.0
+baseline_tuning_cache_refresh: False
+baseline_tuning_num_gpus: 1
+
+
+# hp search on Vimeo (tuning indices of main/1_full_method_comparison), final run on the 30-video REDS val split
+common_hp_sweep_aggregate:
+  ++domain_specific_setup.sample_index: range(1,201,40)
+common_run_sweep:
+  ++domain_specific_setup.sample_index: range(0,30,3)
+common_visual_run_sweep:
+  ++domain_specific_setup.sample_index: [0]
+common_recon_overrides:
+  - ++seed=0
+  - ++save_result.enable=False
+  - ++animate.warp_animation=False
+  - ++animate.init=False
+  - ++animate.final=False
+  # tuning domain; the *_run_overrides switch the group to REDS for the final run
+  - +domain_specific_setup=vimeo_256_gdeblur_s2
+common_visual_recon_overrides_extra: []
+common_visual_recon_save_result_enable: True
+common_visual_recon_cache_refresh: False
+common_visual_recon_num_gpus: 1
+common_post_overrides: []
+
+recon_recon_config_path : task/cmr_recon
+recon_recon_config_name : voxelrep_base
+recon_recon_sweep:
+  +exps: [tv_learntcpl_var]
+recon_recon_hp_overrides:
+  - ++trainer.iterations=999
+recon_recon_hp_sweep_tune_basic_key: sweep
+recon_recon_hp_sweep_tune_extra: {}
+recon_recon_hp_log_wandb: False
+recon_recon_run_overrides:
+  - ++trainer.iterations=999
+  - domain_specific_setup=reds_256_gdeblur_s2
+recon_recon_cache_refresh: False
+recon_recon_num_gpus: 1
+recon_recon_hp_budget_trials_per_param: 12
+recon_recon_hp_refine_budget_trials_per_param: 4
+
+baseline_recon_config_path : task/recon_baseline
+baseline_recon_config_name : base
+baseline_recon_sweep:
+  +exps: [adm_integral_dds]
+baseline_recon_hp_overrides:
+  - ++baseline_params.nfe=999
+baseline_recon_hp_sweep_tune_basic_key: sweep
+baseline_recon_hp_sweep_tune_extra: {}
+baseline_recon_hp_log_wandb: False
+baseline_recon_run_overrides:
+  - ++baseline_params.nfe=999
+  - domain_specific_setup=reds_256_gdeblur_s2
+baseline_recon_cache_refresh: False
+baseline_recon_num_gpus: 1
+baseline_recon_hp_budget_trials_per_param: 12
+baseline_recon_hp_refine_budget_trials_per_param: 4
+
+plot_config_path: task/plot
+plot_config_name: seaborn_sweep_plot
+plot_overrides:
+  - ++tradeoff_plots_enabled=False
+  - ++stochastic_params=['++domain_specific_setup.sample_index', '++seed']
+  - ++paper_summary_table_enabled=True
+  - ++paper_winrate_table_enabled=True
+  - ++paper_summary_metrics_filter=["psnr", "warping_error_occ_l2", "lpips"]
+  - ++winrate_over_param="++domain_specific_setup.sample_index"
+plot_num_gpus: 1
+
+plot_visual_enabled: False
+plot_visual_config_path: task/plot_visual
+plot_visual_config_name: visual_examples
+plot_visual_overrides:
+  - ++visual_examples_enabled=False
+plot_visual_num_gpus: 1

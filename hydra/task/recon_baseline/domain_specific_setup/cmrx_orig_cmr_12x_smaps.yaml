@@ -1,0 +1,13 @@
+# cmrx | CMRxRecon 2024 test set, native resolution | multicoil binned cine CMR, 12x ktGaussian undersampling
+# smaps in the forward model but not in the pseudoinverse (sensmaps_in_base=false)
+
+defaults:
+  - cmrx_binned
+  - _self_
+
+undersampling_factor: 12
+use_smaps: true
+sensmaps_in_base: false
+target_as_psuedoinv_in_reg: false # sic: BinnedMRISetup's kwarg is spelled this way
+crop_and_downscale_cfg:
+  enabled: false

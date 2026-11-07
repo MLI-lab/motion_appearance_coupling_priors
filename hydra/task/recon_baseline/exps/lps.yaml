@@ -1,0 +1,14 @@
+# @package _global_
+
+baseline_params:
+  name: lps_baseline
+  max_iter: 500
+  lambda_l: 0.5
+  lambda_s: 0.01
+  lambda_s_by_lambda_l_factor: null
+  tol: 1e-8
+  eval_every_iters: 20
+
+sweep:
+  ++baseline_params.lambda_l: [10.0, 0.0]
+  ++baseline_params.lambda_s: [1.0, 0.0]

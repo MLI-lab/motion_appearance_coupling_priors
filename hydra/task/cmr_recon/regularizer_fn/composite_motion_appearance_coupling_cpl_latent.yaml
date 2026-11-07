@@ -1,0 +1,45 @@
+# Latent-space variant of composite_motion_appearance_coupling_cpl.yaml: only coupling_regularizer
+# changes; motion_regularizer / appearance_regularizer stay pixel-space, unchanged.
+name: composite_motion_apperance_coupling_regularizer
+
+motion_regularizer:
+  name: motion_regularizer_flow_distance
+  weight: 1.0
+  loss_norm: l1
+
+appearance_regularizer:
+  name: tv_video
+
+coupling_regularizer:
+  name: diffuser_pretrained_cpl_regularizer_latent
+  # latent-space coupling loss; the VAE must be the one the checkpoint was trained with
+  pretrained_model_dir: model_cache/sd15
+  vae_subfolder: vae
+  assume_pixel_range: "0_1"
+  autocast_dtype: null   # e.g. bfloat16 to halve encoder activation memory at 512x512
+  weight: 1.0
+  pretrained_model_name_or_path: null
+  image_conditioning_use_target: null
+
+  # passed to pipe loading / init
+  forward_fn_params:
+    use_final_model: true
+    use_epoch : null
+    use_pass_through: false
+    model_type: UNet2DCondition
+
+  # passed as partial to the regularizer
+  reg_params:
+    weight : 0.0
+  
+  reg_params_var_spec:
+    num_train_steps_factor_lower : 0.0
+    num_train_steps_factor_upper : 0.4
+    adapt_reg_strength: true
+    include_backward : true
+    occlusion_weight : 1.0
+    occlusion_fwd_relative : 1.0
+    occlusion_bwd_relative : 1.0
+    tau_pix : 1.0
+    conf_floor : 0.0
+    enable_occlusion_masking : false

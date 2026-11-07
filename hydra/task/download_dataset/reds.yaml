@@ -1,0 +1,24 @@
+defaults:
+  - base
+  - _self_
+
+# REDS sharp train/val frames from the author's HF mirror (~38.5 GB); the test split's sharp frames were never released.
+dataset_name: reds
+mode: url
+source: https://huggingface.co/datasets/snah/REDS
+files:
+  - key: train_sharp.zip
+    url: "https://huggingface.co/datasets/snah/REDS/resolve/main/train_sharp.zip"
+    size: 34261573976
+    checksum: "sha256:620294c1c3f23ed26c5ea228633770469c0b28e57d31eb41dc77deb401c6681b"
+    extract: zip
+  - key: val_sharp.zip
+    url: "https://huggingface.co/datasets/snah/REDS/resolve/main/val_sharp.zip"
+    size: 4273865704
+    checksum: "sha256:53f6ce4791ed3cfca747ff8982ba29b6e8b7cc1927eed742458f45ed93a1a279"
+    extract: zip
+download_parallel_files: 2
+download_connections_per_file: 8
+expected_layout:
+  - {glob: "train/train_sharp/*/00000000.png", min_count: 240}
+  - {glob: "val/val_sharp/*/00000000.png", min_count: 30}

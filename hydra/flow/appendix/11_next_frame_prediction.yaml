@@ -1,0 +1,125 @@
+name: recon_with_pretrained_dms
+required_datasets: [vimeo_septuplet]
+
+convert_to_video_dataset_task_name: convert_vimeo_to_video_dataset
+convert_to_video_dataset_base_config_path: task/convert_vimeo_to_video_dataset
+convert_to_video_dataset_config_name: config
+convert_to_video_dataset_base_overrides:
+  - ++file_limit=6000
+  - ++torch_mp_process_count=14
+convert_to_video_dataset_task_overrides: {}
+convert_to_video_dataset_cache_refresh: False
+convert_to_video_dataset_num_gpus: 0
+
+preprocess_video_dataset_base_config_path: task/preprocess_video_dataset_for_pretraining
+preprocess_video_dataset_train_config_name: vimeo_videovoxel_train
+preprocess_video_dataset_val_config_name: vimeo_videovoxel_test
+preprocess_video_dataset_base_overrides:
+  - ++seed=0
+  - ++store_warp_parameters=true
+  - ++torch_mp_process_count=2
+  - ++crop.size_before_downscale=512
+  - ++crop.size_after_downscale=256
+  - ++crop.enabled=True
+  - ++warp_method_fit.fit_params.num_iterations=0
+preprocess_video_dataset_task_overrides: {}
+preprocess_video_dataset_cache_refresh: False
+preprocess_video_dataset_num_gpus: 2
+
+visualize_base_config_path: task/visualize_vdm_training_dataset
+visualize_base_config_name: config
+visualize_base_overrides:
+  - ++sample_nr=5
+visualize_task_overrides: {}
+visualize_num_gpus: 1
+
+train_task_name: train_probabilistic_coupling_model
+train_base_config_path: task/train_probabilistic_coupling
+train_base_config_name: config
+train_overrides:
+  - +exps=rgb_model
+train_task_overrides: {}
+train_post_overrides:
+  - ++training_steps=50000
+  - ++sample_image.sample_video_every=10
+  - ++sample_image.params.nr_of_image_samples=2
+  - ++sample_image.params.nr_of_image_samples_uploaded_to_wandb=2
+  - ++sample_image.sample_steps=100
+  - ++use_random_noise=True
+  - ++optimizer.lr=5e-4
+train_cache_refresh: False
+train_num_gpus: 1
+
+recon_task_name: recon_baseline_task
+recon_base_config_path: task/recon_baseline
+recon_base_config_name: base
+recon_base_overrides:
+  - +domain_specific_setup=vimeo_256_identity
+recon_task_overrides:
+  +exps: [propagation_vimeo_warp_single_step, propagation_vimeo_coupling_single_step, propagation_vimeo_coupling_single_step_avg10]
+  # same test clips as main/1_full_method_comparison
+  ++domain_specific_setup.sample_index: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180, 185, 190, 195]
+recon_post_overrides:
+  - ++seed=0
+  - ++baseline_params.single_step_target=next
+  - domain_specific_setup.next_frame_prediction_target=next
+  - ++domain_specific_setup.next_frame_prediction_confidence_threshold=0.9
+  - ++save_result.enable=True
+  - ++animate.warp_animation=False
+  - ++animate.init=False
+  - ++animate.final=False
+recon_cache_refresh: False
+recon_num_gpus: 1
+
+plot_sweep_config_path: task/plot
+plot_sweep_config_name: seaborn_sweep_plot
+plot_sweep_overrides:
+  - ++tradeoff_plots_enabled=False
+  - ++stochastic_params=['++domain_specific_setup.sample_index', '++seed']
+  - ++paper_summary_table_enabled=True
+  - ++paper_winrate_table_enabled=True
+  - ++paper_summary_metrics_filter=["nfp_"]
+  - ++winrate_over_param="++domain_specific_setup.sample_index"
+  - ++paper_significance_table_enabled=True
+  - ++paper_significance_primary=propagation_vimeo_coupling_single_step
+  - ++paper_significance_method_param="+exps"
+  - ++paper_significance_pairing_params=["++domain_specific_setup.sample_index"]
+  - ++paper_significance_metrics_filter=["nfp_rgb_peak_snr", "nfp_peak_snr", "nfp_lpips", "nfp_mse_reliable", "nfp_mse_unreliable", "nfp_mse_reliable_conf", "nfp_mse_unreliable_conf"]
+  - ++paper_significance_method_labels={propagation_vimeo_warp_single_step:'Warping (RAFT)',propagation_vimeo_coupling_single_step:'Learnt coupling',propagation_vimeo_coupling_single_step_avg10:'Learnt coupling (avg. of 10 samples)'}
+  - ++paper_significance_ci_method=bootstrap
+  - ++paper_significance_alternative=two-sided
+  - ++paper_significance_pvalue_correction=holm
+plot_sweep_num_gpus: 1
+
+plot_visual_config_path: task/plot_visual
+plot_visual_config_name: visual_examples
+plot_visual_overrides:
+  - ++visual_examples_enabled=True
+  - ++visual_examples_row_param="++domain_specific_setup.sample_index"
+  - ++visual_examples_row_values=[15]
+  - ++visual_examples_frames_as_rows=True
+  - ++visual_examples_col_param="+exps"
+  - ++visual_examples_max_rows=1
+  - ++visual_examples_max_cols=3
+  - ++visual_examples_col_labels={propagation_vimeo_warp_single_step:'Warping (RAFT)',propagation_vimeo_coupling_single_step:'Learnt coupling',propagation_vimeo_coupling_single_step_avg10:'Learnt coupling (avg. of 10)'}
+  - ++visual_examples_frame_idxs=[1,2,3,4,5,6]
+  - ++visual_examples_stochastic_params=['++seed']
+  - ++visual_examples_zoom_enabled=True
+  - ++visual_examples_zoom_factor=2.0
+  - ++visual_examples_zoom_box_size=0.2
+  - ++visual_examples_zoom_auto_frame=False
+  - ++visual_examples_zoom_criterion=flow_magnitude
+  - ++visual_examples_zoom_border_margin=0.12
+  - ++visual_examples_zoom_shared_across_frames=True
+  - ++visual_examples_metric_overlay_enabled=True
+  - ++visual_examples_metric_overlay_text_color=white
+  - ++visual_examples_normalize_brightness=False
+  - ++visual_examples_include_reference=True
+  - ++visual_examples_include_pseudoinv=False
+  - ++visual_examples_include_anchor_frame=True
+  - ++visual_examples_include_next_frame_confidence=True
+  - ++visual_examples_next_frame_prediction_target=next
+  - ++visual_examples_auxiliary_position=start
+  - ++visual_examples_auxiliary_end_keys=[reference]
+  - ++visual_examples_formats=[png,svg,pdf]
+plot_visual_num_gpus: 1

@@ -1,0 +1,32 @@
+# @package _global_
+# Latent DDS (see sd15_fully_random_dds.yaml) + integral noise warping on the 64x64 latent grid.
+
+baseline_params:
+  name: ldm_baseline
+  pretrained_model_dir: model_cache/sd15
+  vae_subfolder: vae
+  unet_subfolder: unet
+  scheduler_subfolder: scheduler
+  text_encoder_subfolder: text_encoder
+  tokenizer_subfolder: tokenizer
+  assume_pixel_range: "0_1"
+  dtype: float16
+  gradient_checkpointing: false  # no autograd in dds mode
+
+  noise_mode: "integral_noise"
+  noise_params: {}
+
+  nfe: 99
+
+  recon_args:
+    dc_mode: dds
+    eta: 1.0
+    cg_n_inner: 5
+    cg_eps: 1e-5
+    cg_prox_weight: 0.0
+    init_mode: noise
+    init_frac: 1.0
+    eval_every_iters: 5
+
+sweep:
+  ++baseline_params.recon_args.eta: [0.2,1.0]

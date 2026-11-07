@@ -1,0 +1,21 @@
+name: composite_motion_apperance_coupling_regularizer
+
+motion_regularizer:
+  name: motion_regularizer_flow_distance
+  weight: 1.0
+  loss_norm: l1
+
+appearance_regularizer:
+  name: tv_video
+  
+coupling_regularizer:
+  name: fwd_bwd_motion_consistency_image_domain
+  weight: 1.0
+  loss_norm: "l2"
+  weight_bwd_relative: 1.0
+  weight_fwd_relative: 1.0
+  enable_occlusion_masking: True
+  cycle_consistency_weight: 0.0
+  occlusion_weight: 1.0
+  tau_pix: 1.0
+  conf_floor: 0.0

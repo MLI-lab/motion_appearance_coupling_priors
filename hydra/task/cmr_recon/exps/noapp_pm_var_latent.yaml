@@ -1,0 +1,39 @@
+# @package _global_
+# Latent-space counterpart of noapp_confpm_var: plain l1 fwd/bwd warp-consistency on SD-VAE latents, without occlusion masking; motion frozen at RAFT init.
+defaults:
+  - override /regularizer_fn: composite_motion_appearance_coupling_novdm_latent
+
+optimizer:
+  occlusion_lr: 0.1
+  lr: 0.1
+  motion_lr: 0.0   # motion frozen at the RAFT init
+
+model_initializer:
+  motion_init: "raft"
+
+regularizer_fn:
+  motion_regularizer:
+    weight: 0.0  # inert anyway with motion_lr 0
+    loss_norm: l1
+
+  coupling_regularizer:
+    weight: 8e-3
+    weight_bwd_relative: 1.0
+    weight_fwd_relative: 1.0
+    loss_norm: "l1"
+    enable_occlusion_masking: False
+    apply_scaling_factor_from_setup: False  # VAE encodes the scaled measurement video instead of [0,1] pixels
+
+  appearance_regularizer:
+    img_x_tv_weight: 0.0
+    norm_order_temporal: 1
+    use_confidence_weights_for_tv: False
+
+trainer:
+  scheduler_kwargs:
+    patience: 50
+  gradient_acc_steps: 1
+  iterations: 400
+
+sweep:
+  ++regularizer_fn.coupling_regularizer.weight: [1e0,1e-4]

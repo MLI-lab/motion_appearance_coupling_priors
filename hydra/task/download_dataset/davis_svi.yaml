@@ -1,0 +1,14 @@
+defaults:
+  - base
+  - _self_
+
+# Old DAVIS-SVI clip set (338 16-frame 256x256 .npy clips), only for reproducing runs on it; staged by hand.
+dataset_name: davis_svi
+target_dir: manual/DAVIS-SVI
+mode: manual
+source: batch-consistent-sampling (SVI) paper repository, preprocessed DAVIS 2017
+instructions: >
+  Place the DAVIS-SVI dump (video_XXX/split_NNN.npy, 338 clips in total) at
+  <data_manual_root>/DAVIS-SVI.
+expected_layout:
+  - {glob: "video_*/*.npy", min_count: 338}

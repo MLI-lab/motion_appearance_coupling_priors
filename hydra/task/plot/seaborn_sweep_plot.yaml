@@ -1,0 +1,55 @@
+palette: deep
+figsize: [8,6]
+type: line # or scatter
+dpi: 300
+
+stochastic_params: []
+tradeoff_plots_enabled: True
+tradeoff_same_color_lines_enabled: False
+tradeoff_errorbars_enabled: False
+
+paper_summary_table_enabled: False
+paper_summary_metrics_filter: []
+paper_winrate_table_enabled: False
+# empty = reuse paper_summary_metrics_filter
+paper_winrate_metrics_filter: []
+winrate_over_param: sample_index
+
+# Paired significance table: primary method vs every other value of paper_significance_method_param.
+paper_significance_table_enabled: False
+# required, e.g. davis_256x256_flowdist_noapp_cpl
+paper_significance_primary: null
+paper_significance_method_param: "+exps"
+# empty = reuse paper_summary_metrics_filter
+paper_significance_metrics_filter: []
+# empty = all sweep params except the method param
+paper_significance_pairing_params: []
+# empty = all other methods
+paper_significance_baselines: []
+paper_significance_method_labels: {}
+paper_significance_metric_labels: {}
+paper_significance_ci_method: bootstrap  # or "t" (Student-t)
+paper_significance_ci_level: 0.95
+paper_significance_bootstrap_samples: 10000
+paper_significance_bootstrap_seed: 0
+# deltas oriented so that positive = primary is better
+paper_significance_alternative: two-sided
+paper_significance_pvalue_correction: none  # or "holm"
+# optional: one table per value of this sweep param
+paper_significance_split_param: null
+paper_significance_split_labels: {}
+
+visual_examples_enabled: False
+visual_examples_frame_idx: 0
+visual_examples_row_param: null
+visual_examples_col_param: null
+visual_examples_filter_params: {}
+visual_examples_figsize: null
+visual_examples_formats: [png, svg]
+visual_examples_include_reference: True
+visual_examples_include_pseudoinv: True
+visual_examples_storage_subdir: visual_examples
+visual_examples_dpi: 300
+
+log_lin_scale_auto_enabled: True
+log_lin_scale_threshold: 2.0

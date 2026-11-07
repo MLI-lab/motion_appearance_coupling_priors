@@ -1,0 +1,42 @@
+seed: 0
+
+
+dataset_dir_in: manual/CMRxRecon
+base_output_dir: converted/cmrx_fs_sax_lax_videos
+
+store_rss_target: true
+store_rss_target_name: target_rss
+store_mvue_target: true
+store_mvue_target_name: target_mvue
+
+# per-frame k-space phase drift correction; no-op for magnitude flow, improves complex-domain warping on CMRxRecon 2023
+apply_phase_correction: true
+
+h5_attrs_max_name: max
+torch_mp_process_count: 8
+
+splits:
+  train_2023_sax:
+    - CMRxRecon2023/ChallengeData/MultiCoil/Cine/TrainingSet/FullSample/**/*sax*.mat # 119
+  train_2023_lax:
+    - CMRxRecon2023/ChallengeData/MultiCoil/Cine/TrainingSet/FullSample/**/*lax*.mat # ??
+  train_2024_sax:
+    - CMRxRecon2024/ChallengeData/MultiCoil/Cine/TrainingSet/FullSample/**/*sax*.mat #  178
+  train_2024_lax:
+    - CMRxRecon2024/ChallengeData/MultiCoil/Cine/TrainingSet/FullSample/**/*lax*.mat # ??
+  val_2023_sax:
+    - CMRxRecon2023/ChallengeDataAfterCompetition/ChallengeData_validation/MultiCoil/Cine/ValidationSet/FullSample/**/*sax*.mat # 60
+  val_2023_lax:
+    - CMRxRecon2023/ChallengeDataAfterCompetition/ChallengeData_validation/MultiCoil/Cine/ValidationSet/FullSample/**/*lax*.mat # 60
+  val_2024_sax:
+    - CMRxRecon2024/ChallengeDataAfterCompetition/MultiCoil/Cine/ValidationSet/FullSample/**/*sax*.mat # 59
+  val_2024_lax:
+    - CMRxRecon2024/ChallengeDataAfterCompetition/MultiCoil/Cine/ValidationSet/FullSample/**/*lax*.mat # 59
+  test_2023_sax:
+    - CMRxRecon2023/ChallengeDataAfterCompetition/ChallengeData_test/MultiCoil/Cine/TestSet/FullSample/**/*sax*.mat # 87
+  test_2023_lax:
+    - CMRxRecon2023/ChallengeDataAfterCompetition/ChallengeData_test/MultiCoil/Cine/TestSet/FullSample/**/*lax*.mat # 87
+  test_2024_sax:
+    - CMRxRecon2024/ChallengeDataAfterCompetition/MultiCoil/Cine/TestSet/FullSample/**/*sax*.mat # 66
+  test_2024_lax:
+    - CMRxRecon2024/ChallengeDataAfterCompetition/MultiCoil/Cine/TestSet/FullSample/**/*lax*.mat # 66

@@ -1,0 +1,80 @@
+name: composite_motion_apperance_coupling_regularizer
+
+motion_regularizer:
+  name: motion_regularizer_flow_distance
+  weight: 1.0
+  loss_norm: l1
+
+appearance_regularizer:
+  # using code from https://github.com/svi-diffusion/codes/tree/main
+  name: diffusion_idm_regularizer
+  model_path: https://openaipublic.blob.core.windows.net/diffusion/jul-2021/256x256_diffusion_uncond.pt
+  cache_dir: model_cache
+  use_score_pass_through: true
+
+  arch:
+    # model defaults
+    image_size: 256
+    num_channels: 256
+    in_channels: 3
+    num_res_blocks: 2
+    num_heads: 4
+    num_heads_upsample: -1
+    num_head_channels: 64
+    attention_resolutions: "8,16,32"
+    channel_mult: [1,1,2,2,4,4]
+    dropout: 0.0
+    use_scale_shift_norm: true
+    resblock_updown: true
+    use_fp16: false
+    use_new_attention_order: false
+    learn_sigma: true
+  
+  sde:
+    beta_min: 0.0001
+    beta_max: 0.02
+    num_steps: 1000
+
+  reg_params:
+    reg_strength: 0.0
+    data_multiplier: 1.0
+    num_train_steps_factor_lower: 0.0
+    num_train_steps_factor_upper: 0.5
+    adapt_reg_strength: true
+    take_base_image_only : false
+    batch_size: 1
+    use_same_batch_size : true
+    take_trainer_timesteps : true
+    consistent_noise : false
+    # timestep annealing: random (default) | linear | sqrt | cosine | quadratic | log | inverse_sqrt
+    timestep_schedule: random
+    timestep_jitter_fraction: 0.2
+
+coupling_regularizer:
+  name: diffuser_pretrained_cpl_regularizer
+  weight: 1.0
+  pretrained_model_name_or_path: null
+  image_conditioning_use_target: null
+
+  # passed to pipe loading / init
+  forward_fn_params:
+    use_final_model: true
+    use_epoch : null
+    use_pass_through: false
+    model_type: UNet2DCondition
+
+  # passed as partial to the regularizer
+  reg_params:
+    weight : 0.0
+  
+  reg_params_var_spec:
+    num_train_steps_factor_lower : 0.0
+    num_train_steps_factor_upper : 0.4
+    adapt_reg_strength: true
+    include_backward : true
+    occlusion_weight : 1.0
+    occlusion_fwd_relative : 1.0
+    occlusion_bwd_relative : 1.0
+    tau_pix : 1.0
+    conf_floor : 0.0
+    enable_occlusion_masking : false

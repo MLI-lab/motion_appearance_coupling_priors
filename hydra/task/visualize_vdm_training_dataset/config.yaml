@@ -1,0 +1,22 @@
+seed : 0
+sample_nr : 3
+sample_random: true
+
+animation:
+  quiver_cfg:
+    scale: 0.002
+    figsize: [3,3]
+    dpi: 300
+  color_cfg:
+    percentile: 99.0
+  overlay_cfg:
+    use_pairwise_deltas: True
+    arrow_scale: 0.0005
+    arrow_stride: 4
+
+clamp_lower : -6.0
+clamp_upper : 6.0
+
+noise_warp_upsample_factor: 2
+
+fps_slowdown_factor: 1.0

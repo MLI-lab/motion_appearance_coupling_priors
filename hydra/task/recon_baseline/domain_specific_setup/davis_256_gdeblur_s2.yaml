@@ -1,0 +1,32 @@
+# davis | 256x256 clips from DAVIS2017Dataset (no extra crop/downscale) | Gaussian blur, kernel_size=31, std=2.0 | noise std 0.001
+
+name: natural_video_setup
+
+base_path: raw/davis_2017
+
+sample_index: 0
+video_length_in_s: 1.0
+set_forward_model: true
+target_as_pseudoinv_in_reg: false
+scale_measurement: true
+additive_gaussian_noise_std: 0.001
+
+forward_model_cfg:
+  name: blurring
+  kernel_size: 31
+  std: 2.0
+  kernel_size_t: 1
+
+dataset_cfg:
+  name: davis
+  split: val  # 30 held-out videos (sample_index 0..29)
+  clip_stride: 1000  # > any video length -> one clip (first 16 frames) per video
+  simulation_cfg:  # overwritten by forward_model_cfg
+    name: blurring
+    kernel_size: 31
+    std: 2.0
+    kernel_size_t: 1
+  crop_and_downscale_cfg:
+    enabled: false
+    size_before_downscale: 512
+    size_after_downscale: 256

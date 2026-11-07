@@ -1,0 +1,49 @@
+# @package _global_
+# ADM image-diffusion appearance prior only; coupling weight 0, block kept so occlusion masking still drives the occlusion parameter.
+defaults:
+  - override /regularizer_fn: composite_motion_appearance_coupling_idm_adm
+
+optimizer:
+  occlusion_lr: 0.1
+  lr: 0.1
+  motion_lr: 0.0
+
+model_initializer:
+  motion_init: "raft"
+
+regularizer_fn:
+  motion_regularizer:
+    weight: 0.0
+    weight_bwd_relative: 1.0
+    weight_fwd_relative: 1.0
+    loss_norm: "l1"
+
+  coupling_regularizer:
+    weight: 0.0
+    loss_norm: "l1"
+    weight_bwd_relative: 1.0
+    weight_fwd_relative: 1.0
+    enable_occlusion_masking: True
+    cycle_consistency_weight: 0.0
+    occlusion_weight: 1.0
+    tau_pix: 1.0
+    conf_floor: 0.0
+
+  appearance_regularizer:
+    reg_params:
+      reg_strength: 1e-2
+      noise_mode: "fully_random"
+      consistent_timestep: True
+      normalization: "2times_minus1"
+      num_train_steps_factor_upper: 0.4
+      adapt_reg_strength: True
+
+trainer:
+  scheduler_kwargs:
+    patience: 100
+  gradient_acc_steps: 1
+  iterations: 400
+
+
+sweep:
+  ++regularizer_fn.appearance_regularizer.reg_params.reg_strength: [1e0,1e-4]

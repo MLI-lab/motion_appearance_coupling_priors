@@ -1,0 +1,26 @@
+# Latent-space variant of composite_motion_appearance_coupling_novdm.yaml: fwd/bwd photometric consistency on SD1.5-VAE latents.
+name: composite_motion_apperance_coupling_regularizer
+
+motion_regularizer:
+  name: motion_regularizer_flow_distance
+  weight: 1.0
+  loss_norm: l1
+
+appearance_regularizer:
+  name: tv_video
+
+coupling_regularizer:
+  name: fwd_bwd_motion_consistency_latent_domain
+  pretrained_model_dir: model_cache/sd15
+  vae_subfolder: vae
+  assume_pixel_range: "0_1"
+  apply_scaling_factor_from_setup: True  # VAE encoder needs [0,1] pixels
+  weight: 1.0
+  loss_norm: "l2"
+  weight_bwd_relative: 1.0
+  weight_fwd_relative: 1.0
+  enable_occlusion_masking: False  # not supported in the latent domain
+  cycle_consistency_weight: 0.0
+  occlusion_weight: 1.0
+  tau_pix: 1.0
+  conf_floor: 0.0

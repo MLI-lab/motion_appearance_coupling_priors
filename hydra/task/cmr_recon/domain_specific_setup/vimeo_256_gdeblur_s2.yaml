@@ -1,0 +1,33 @@
+# vimeo | 448x256 frames -> center-crop clamped to the full frame -> nearest-resize 256x256 | Gaussian blur, kernel_size=31, std=2.0 | slight measurement noise (std 0.001)
+
+name: natural_video_setup
+
+base_path: raw/vimeo_septuplet
+
+sample_index: 0
+video_length_in_s: 1.0
+set_forward_model: true
+target_as_pseudoinv_in_reg: false
+scale_measurement: true
+additive_gaussian_noise_std: 0.001
+
+forward_model_cfg:
+  name: blurring
+  kernel_size: 31
+  std: 2.0
+  kernel_size_t: 1
+
+dataset_cfg:
+  name: vimeo
+  list_file: sep_testlist.txt
+  target_folder: sequences
+  measurement_folder: null
+  simulation_cfg:  # overwritten by forward_model_cfg
+    name: blurring
+    kernel_size: 31
+    std: 2.0
+    kernel_size_t: 1
+  crop_and_downscale_cfg:
+    enabled: true
+    size_before_downscale: 512
+    size_after_downscale: 256

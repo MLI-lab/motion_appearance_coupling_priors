@@ -1,0 +1,60 @@
+
+# @package _global_
+# noapp_learntcpl_var with the classical l1 coupling only (diffusion weight fixed at 0) (appendix/5_cosine_schedule_ablation).
+defaults:
+  - override /regularizer_fn: composite_motion_appearance_coupling_cpl
+
+optimizer:
+  occlusion_lr: 0.1
+  lr: 0.1
+  motion_lr: 0.0
+
+model_initializer:
+  motion_init: "raft"
+
+regularizer_fn:
+  motion_regularizer:
+    weight: 0.0
+    loss_norm: l1
+
+  coupling_regularizer:
+    # passed to pipe loading / init
+    forward_fn_params:
+      use_final_model: true
+      use_epoch : null
+      use_pass_through: false
+      model_type: UNet2DCondition
+
+    # passed as partial to the regularizer
+    reg_params:
+      weight : 0.0  # fixed: l1 coupling only
+  
+    reg_params_var_spec:
+      num_train_steps_factor_lower : 0.0
+      num_train_steps_factor_upper : 0.4
+      adapt_reg_strength: true
+      include_backward : true
+      occlusion_weight : 1.0
+      occlusion_fwd_relative : 1.0
+      occlusion_bwd_relative : 1.0
+      tau_pix : 1.0
+      conf_floor : 0.0
+      enable_occlusion_masking : false
+      apply_scaling_factor_from_setup: False
+      use_sin_cos_annealing: False
+      normalization: "none"
+      target_l1_weight: 1e-4
+
+  appearance_regularizer:
+    img_x_tv_weight: 0.0
+    norm_order_temporal: 1
+    use_confidence_weights_for_tv: False
+
+trainer:
+  scheduler_kwargs:
+    patience: 50
+  gradient_acc_steps: 1
+  iterations: 400
+
+sweep:
+  ++regularizer_fn.coupling_regularizer.reg_params_var_spec.target_l1_weight: [1e1,1e-4]

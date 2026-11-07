@@ -1,0 +1,30 @@
+torch==2.1.0
+torchvision==0.16.0
+numpy<2 # torch 2.1.0 breaks with numpy 2.x
+scipy
+scikit-image
+einops
+imageio
+lpips
+tqdm
+hydra-core
+diffusers==0.34.0
+transformers==4.47.0
+accelerate
+prefect[ray]==3.4.0
+ray[default]==2.52.0
+pydantic
+wandb==0.19.11 # later versions handle wandb.Image differently
+pandas
+omegaconf
+matplotlib
+h5py
+fastmri
+moviepy
+ninja==1.11.1.4 # for nvdiffrast
+s3fs
+dict-hash
+sentencepiece
+peft
+seaborn
+opencv-python-headless<5 # 5.x requires numpy>=2

@@ -1,0 +1,37 @@
+# @package _global_
+# Spatial TV only; coupling weight 0, fwd/bwd block kept because its occlusion-confidence loss still drives the occlusion parameter.
+defaults:
+  - override /regularizer_fn: composite_motion_appearance_coupling_novdm
+
+optimizer:
+  occlusion_lr: 0.1
+  lr: 0.1
+  motion_lr: 0.0
+
+model_initializer:
+  motion_init: "raft"
+
+regularizer_fn:
+  motion_regularizer:
+    weight: 0.0
+    loss_norm: l1
+
+  coupling_regularizer:
+    weight: 0.0
+    weight_bwd_relative: 1.0
+    weight_fwd_relative: 1.0
+    loss_norm: "l1"
+
+  appearance_regularizer:
+    img_x_tv_weight: 1e-4
+    norm_order_temporal: 1
+    use_confidence_weights_for_tv: False
+
+trainer:
+  scheduler_kwargs:
+    patience: 50
+  gradient_acc_steps: 1
+  iterations: 400
+
+sweep:
+  ++regularizer_fn.appearance_regularizer.img_x_tv_weight: [1e0,1e-4]

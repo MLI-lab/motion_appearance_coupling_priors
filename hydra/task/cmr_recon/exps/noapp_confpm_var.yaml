@@ -1,0 +1,38 @@
+# @package _global_
+# DC + plain l1 fwd/bwd warp-consistency prior (no learnt model), occlusion masking from the occlusion parameter, motion frozen.
+#   w * ( || v_{t+1} - W(v_t, m_t) ||_1 + || v_t - W(v_{t+1}, m_bwd_t) ||_1 ) / 2
+defaults:
+  - override /regularizer_fn: composite_motion_appearance_coupling_novdm
+
+optimizer:
+  occlusion_lr: 0.1
+  lr: 0.1
+  motion_lr: 0.0
+
+model_initializer:
+  motion_init: "raft"
+
+regularizer_fn:
+  motion_regularizer:
+    weight: 0.0
+    loss_norm: l1
+
+  coupling_regularizer:
+    weight: 8e-3
+    weight_bwd_relative: 1.0
+    weight_fwd_relative: 1.0
+    loss_norm: "l1"
+
+  appearance_regularizer:
+    img_x_tv_weight: 0.0
+    norm_order_temporal: 1
+    use_confidence_weights_for_tv: False
+
+trainer:
+  scheduler_kwargs:
+    patience: 50
+  gradient_acc_steps: 1
+  iterations: 400
+
+sweep:
+  ++regularizer_fn.coupling_regularizer.weight: [1e0,1e-4]

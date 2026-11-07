@@ -1,0 +1,25 @@
+defaults:
+  - base
+  - _self_
+
+# Vimeo-90K septuplet, ~82 GB zip. The MIT server has been returning 403, so a hand-staged copy under manual/ is used when present.
+dataset_name: vimeo_septuplet
+mode: url
+source: http://toflow.csail.mit.edu/
+manual_fallback_dir: manual/${dataset_name}
+instructions: >
+  If the MIT download is unavailable, place an existing copy at
+  <data_manual_root>/vimeo_septuplet so that sequences/*/*/im1.png,
+  sep_trainlist.txt and sep_testlist.txt are directly below it.
+files:
+  - key: vimeo_septuplet.zip
+    url: "http://data.csail.mit.edu/tofu/dataset/vimeo_septuplet.zip"
+    size: null
+    checksum: null
+    extract: zip
+    strip_prefix: vimeo_septuplet
+download_connections_per_file: 8
+expected_layout:
+  - {glob: "sequences/*/*/im1.png", min_count: 90000}
+  - {glob: "sep_trainlist.txt", min_count: 1}
+  - {glob: "sep_testlist.txt", min_count: 1}

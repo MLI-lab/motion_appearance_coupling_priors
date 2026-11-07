@@ -1,0 +1,9 @@
+name : binned_kspace
+iterations: 10
+scheduler_kwargs:
+  mode: "min"
+  factor: 0.5
+  patience: 50
+chunks: 10
+skip_temp: False
+img_eval_every_iters: 5

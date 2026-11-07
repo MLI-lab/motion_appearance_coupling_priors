@@ -1,0 +1,15 @@
+defaults:
+  - base
+  - _self_
+
+# PDDR authors' released checkpoint (pddr_native baseline); no stable public URL -> staged by hand.
+dataset_name: pddr_checkpoint
+target_dir: manual/pddr_checkpoint/trained_model
+mode: manual
+source: PDDR authors' release
+instructions: >
+  Place the authors' trained_model directory at <data_manual_root>/pddr_checkpoint/trained_model
+  (must contain models/model.pt and configs/diffusion.yaml).
+expected_layout:
+  - {glob: "models/model.pt", min_count: 1}
+  - {glob: "configs/diffusion.yaml", min_count: 1}

@@ -1,0 +1,18 @@
+seed: 0
+
+
+dataset_dir_in: raw/vimeo_septuplet
+base_output_dir: converted/vimeo
+
+h5_target_name: video
+h5_attrs_max_name: max
+torch_mp_process_count: 8
+
+file_limit: -1
+sequences_folder: sequences
+train_list_file: sep_trainlist.txt
+test_list_file: sep_testlist.txt
+
+splits:
+  - train
+  - test

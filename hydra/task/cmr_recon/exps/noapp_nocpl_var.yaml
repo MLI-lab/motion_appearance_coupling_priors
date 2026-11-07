@@ -1,0 +1,20 @@
+# @package _global_
+# Data consistency only (no regularizer); unlike pseudoinv, the fit loop actually runs.
+defaults:
+  - override /regularizer_fn: none
+
+optimizer:
+  occlusion_lr: 0.1
+  lr: 0.1
+  motion_lr: 0.0
+
+model_initializer:
+  motion_init: "raft"
+
+trainer:
+  scheduler_kwargs:
+    patience: 50
+  gradient_acc_steps: 1
+  iterations: 400
+
+sweep: {}

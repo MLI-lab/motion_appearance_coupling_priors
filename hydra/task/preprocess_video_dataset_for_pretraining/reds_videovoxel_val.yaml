@@ -1,0 +1,58 @@
+seed: 0
+
+splits:
+  - val
+
+splits_filter:
+  - null
+
+base_output_dir: preprocessed
+
+warp_method: # contains other default parameters as well
+  name: videovoxel_representation
+  motion_is_velocity: true
+  add_motion_parameter: true
+  add_motion_bwd_parameter: true
+  add_occlusion_weighting_parameter: false
+  add_additive_gains_parameter: false
+
+warp_method_fit:
+  init_params:
+    name: video_and_motion_init_full
+    motion_init: raft
+  fit_params:
+    base_lr: 0.0
+    temp_lr: 0.0
+    num_iterations: 0
+    target_psnr: 50.0
+    print_loss_every: null
+    use_tqdm: false
+    lr_factor: 0.5
+    lr_patience: 200
+    regularizer_cfg: None
+
+video_duration_in_s: 1.0  # placeholder; only used for time-mesh normalization
+key_in_filter: video
+normalization: "video_div_std"
+
+crop:
+  enabled: false
+  size_before_downscale: [640, 640]
+  size_after_downscale: [256, 256]
+
+file_limit: -1  # 30 val videos x 10 slabs = 300 clips
+
+torch_mp_process_count: 8
+
+fit_motion_model: true
+noise_warp_upsample_factor: 3
+store_warp_parameters: true
+
+output_keys:
+  video: video
+  base_tensor: base_tensor
+  defo_map: defo_map
+  scaling_factor: scaling_factor
+  fps: fps
+  warped_noise_sample: warped_noise_sample
+  warp_parameters: warp_parameters

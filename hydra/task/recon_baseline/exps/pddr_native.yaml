@@ -1,0 +1,28 @@
+# @package _global_
+# Baseline: PDDR (Fuernrohr & Heckel 2026) with the authors' pretrained checkpoint; recon_args as in their experiment_pddr.yaml.
+
+baseline_params:
+  name: pddr_native_baseline
+
+  model_dir: manual/pddr_checkpoint/trained_model
+  checkpoint_name: model.pt
+  use_ema: true
+
+  recon_args:
+    optim_steps: 100
+    reg_param: 0.03
+    slab_size: 36
+    slab_sampling: sliding_window
+    timestep_factor: 0.4
+    time_sampling: descending
+    consistency_loss: l2
+    regularization_loss: l2
+    tv_reg_param: 0.0
+    lr: 1.0
+    lr_scheduler: true
+    lr_scheduler_factor: 0.25
+    lr_scheduler_patience: 25
+    eval_every_iters: 5
+
+sweep:
+  ++baseline_params.recon_args.reg_param: [1e2, 1e-6]

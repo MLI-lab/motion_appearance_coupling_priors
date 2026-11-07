@@ -1,0 +1,16 @@
+tune_metric: psnr
+tune_metric_take_max: true
+secondary_mode: none
+secondary_metric: lpips
+secondary_metric_take_max: false
+secondary_metric_max_deviation: 0.0
+secondary_soft_penalty_lambda: 1.0
+selection_method: best_overall
+add_wandb_plot: true
+dpi: 200
+log_lin_scale_auto_enabled: true
+log_lin_scale_threshold: 2.0
+apply_log_to_spline: true
+spline_smoothing_factor: 50
+spline_nr_points: 100
+fail_on_boundary_best: false

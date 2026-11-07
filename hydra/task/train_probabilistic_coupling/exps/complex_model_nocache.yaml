@@ -1,0 +1,114 @@
+# @package _global_
+seed: 0
+
+cache_refresh: false
+cache:
+  train_dataset:
+    cache_path_base_dir: train_cache/train_idm_task_cache_train
+    enabled: false
+    limit_cache_size: -1 # 10 #-1
+  val_dataset:
+    cache_path_base_dir: train_cache/train_idm_task_cache_val
+    enabled: false
+    limit_cache_size: -1 # 10 #-1
+
+accelerator:
+  device_placement: false
+  mixed_precision: fp16
+  gradient_accumulation_steps: 1
+  cpu: false
+
+dataloader_train:
+  batch_sampler_params:
+    batch_size: 8
+    shuffle: true
+  dl_params:
+    num_workers: 0
+    pin_memory: False
+
+dataloader_val:
+  batch_sampler_params:
+    batch_size: 8
+    shuffle: false
+  dl_params:
+    num_workers: 0
+    pin_memory: False
+
+lr_scheduler:
+  name: cosine
+  num_warmup_steps: 500
+
+coupling_transform:
+  enabled: true
+  size_before_downscale: [256, 256]
+  size_after_downscale: [64, 64]
+  enable_crop_and_downscale: false
+  normalization: none
+
+coupling_model:
+  condition_include_motion: true
+  condition_include_warped_nframe: true
+  condition_include_confidence: false
+  confidence_tau_pix: 1.0
+  confidence_floor: 0.05
+  motion_unit_scale: false
+  training_branches: both
+
+model:
+  name: UNet2DCondition
+  in_channels: 2
+  out_channels: 2
+  cross_attention_dim: [null, null, null, null] # 128 -> [128, 128, 128] | 
+  block_out_channels: [32, 64, 128, 128]
+  down_block_types: ["DownBlock2D", "DownBlock2D", "DownBlock2D", "DownBlock2D"]
+  up_block_types: ["UpBlock2D", "UpBlock2D", "UpBlock2D", "UpBlock2D"]
+  layers_per_block: 4
+  addition_time_embed_dim: 512
+  projection_class_embeddings_input_dim: 2048 # must be nr_add_time_ids * addition_time_embed_dim (4 in current implementation)
+  transformer_layers_per_block: 1
+  set_default_attn_processor: true
+  enable_forward_chunking: false
+  forward_chunking_chunk_size: 1
+  use_xformers_memory_efficient_attention: false
+model_skip_mid_block: false
+
+noise_scheduler: # DDPMScheduler
+  num_train_timesteps: 1000
+  beta_start: 0.0001 #0.00085
+  beta_end: 0.02 #0.012
+  beta_schedule: linear
+  variance_type: fixed_small
+  clip_sample: false
+  prediction_type: epsilon
+  sample_max_value: 1.0
+
+ema:
+  enabled: true
+  update_by_steps: true
+  update_ema_every: 1
+  update_step_start: 1
+  decay: 0.999
+
+optimizer: # AdamW
+  lr: 1e-4
+
+sample_image:
+  sample_image_every: 2
+  sample_final: true
+  params:
+    nr_of_image_samples: 10
+    nr_of_image_samples_uploaded_to_wandb: 10
+    sample_unwarped_noise: true
+  scheduler: {}
+  sample_steps: 50
+
+store_model:
+  output_dir: idm-model
+  save_model_every: 5
+
+storage_settings:
+  is_remote: true
+  bucket_or_base_path: ml-models
+  storage_name: ml-models
+
+use_random_noise: false

@@ -1,0 +1,31 @@
+# vimeo | 448x256 frames -> center-crop clamped to the full frame -> nearest-resize 256x256 | identity (measurement == target) | no measurement noise
+# No noise and no measurement scaling: anchor frames are the true frames, predictions stay in [0,1].
+
+name: natural_video_setup
+
+base_path: raw/vimeo_septuplet
+
+sample_index: 0
+video_length_in_s: 1.0
+set_forward_model: true
+target_as_pseudoinv_in_reg: false
+scale_measurement: false
+additive_gaussian_noise_std: null
+# null | previous | next: score the predicted frames of a single-step propagation baseline
+# (nfp_* metrics); must match the baseline's single_step_target
+next_frame_prediction_target: null
+
+forward_model_cfg:
+  name: identity
+
+dataset_cfg:
+  name: vimeo
+  list_file: sep_testlist.txt
+  target_folder: sequences
+  measurement_folder: null
+  simulation_cfg:  # overwritten by forward_model_cfg
+    name: identity
+  crop_and_downscale_cfg:
+    enabled: true
+    size_before_downscale: 512
+    size_after_downscale: 256

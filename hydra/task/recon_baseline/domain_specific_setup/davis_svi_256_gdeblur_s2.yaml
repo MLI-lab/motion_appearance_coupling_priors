@@ -1,0 +1,30 @@
+# davis_svi | old DAVIS-SVI clip set (338 pre-cut 16-frame 256x256 clips) | Gaussian blur, kernel_size=31, std=2.0 | noise std 0.001
+
+name: natural_video_setup
+
+base_path: manual/DAVIS-SVI
+
+sample_index: 0
+video_length_in_s: 1.0
+set_forward_model: true
+target_as_pseudoinv_in_reg: false
+scale_measurement: true
+additive_gaussian_noise_std: 0.001
+
+forward_model_cfg:
+  name: blurring
+  kernel_size: 31
+  std: 2.0
+  kernel_size_t: 1
+
+dataset_cfg:
+  name: davis_svi
+  simulation_cfg:  # overwritten by forward_model_cfg
+    name: blurring
+    kernel_size: 31
+    std: 2.0
+    kernel_size_t: 1
+  crop_and_downscale_cfg:
+    enabled: false
+    size_before_downscale: 512
+    size_after_downscale: 256

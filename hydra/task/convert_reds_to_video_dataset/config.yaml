@@ -1,0 +1,23 @@
+seed: 0
+
+dataset_dir_in: raw/reds
+
+base_output_dir: converted/reds
+
+h5_target_name: video
+h5_attrs_max_name: max
+torch_mp_process_count: 8
+
+file_limit: -1  # 240/30 videos total
+
+# layout <split>/<split>_sharp/<video_id>; subfolder = f"{split}{sharp_subfolder_suffix}"
+sharp_subfolder_suffix: "_sharp"
+frame_glob: "*.png"  # 00000000.png .. 00000099.png
+
+# split each 100-frame sequence into slab_size-frame clips (slab_size<=0: one file per video)
+slab_size: 10
+slab_stride: 10  # == slab_size (non-overlapping)
+
+splits:
+  - train
+  - val

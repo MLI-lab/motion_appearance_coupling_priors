@@ -1,0 +1,57 @@
+visual_examples_enabled: True
+visual_examples_frame_idx: 0
+visual_examples_frame_idxs: []
+visual_examples_stochastic_params: []
+visual_examples_row_param: null
+visual_examples_col_param: null
+visual_examples_max_rows: 2
+visual_examples_max_cols: 4
+visual_examples_figsize: null
+visual_examples_formats: [png, svg]
+visual_examples_auxiliary_layout: columns
+visual_examples_auxiliary_position: end
+visual_examples_metric_overlay_enabled: False
+visual_examples_metric_overlay_metrics: []
+visual_examples_metric_overlay_text_color: white
+visual_examples_metric_overlay_decimals: 2
+visual_examples_metric_overlay_fontsize: 8
+visual_examples_time_slice_mode: none
+visual_examples_time_slice_size_ratio: 0.25
+visual_examples_time_slice_center_row: -1
+visual_examples_time_slice_center_col: -1
+visual_examples_xt_slice_enabled: False
+visual_examples_xt_slice_height_ratio: 0.25
+visual_examples_xt_slice_center_row: -1
+# zoom_box = [y0, x0, h, w] as frame fractions; null picks the window with the largest spatial LPIPS
+visual_examples_zoom_enabled: False
+visual_examples_zoom_factor: 2.0
+visual_examples_zoom_box: null
+visual_examples_zoom_box_size: 0.2
+visual_examples_zoom_auto_frame: False
+# zoom_criterion: lpips | flow_magnitude
+visual_examples_zoom_criterion: lpips
+visual_examples_zoom_border_margin: 0.0
+visual_examples_zoom_shared_across_frames: False
+# also export <name>__plain/__box/__crop.png per zoomed panel
+visual_examples_zoom_crop_upscale: 4
+visual_examples_frames_as_rows: False
+visual_examples_row_values: []
+visual_examples_col_labels: {}
+# e.g. [reference]
+visual_examples_auxiliary_end_keys: []
+# next-frame prediction panels (anchor frame, soft fb flow confidence)
+visual_examples_include_anchor_frame: False
+visual_examples_include_next_frame_confidence: False
+visual_examples_next_frame_prediction_target: next
+visual_examples_next_frame_confidence_tau_pix: 1.0
+visual_examples_include_reference: True
+visual_examples_include_pseudoinv: True
+visual_examples_normalize_brightness: False
+visual_examples_storage_subdir: visual_examples
+visual_examples_dpi: 300
+visual_examples_video_enabled: False
+visual_examples_video_fps: 8
+visual_examples_video_max_frames: 0
+visual_examples_video_frame_stride: 1
+# null -> visual_examples_dpi
+visual_examples_video_dpi: null

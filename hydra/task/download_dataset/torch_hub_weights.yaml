@@ -1,0 +1,29 @@
+defaults:
+  - base
+  - _self_
+
+# torchvision checkpoints (RAFT-Large, LPIPS AlexNet/VGG16), pre-staged because concurrent lazy torch.hub downloads race on NFS.
+# Checksums: torchvision names each file after the first 8 hex digits of its sha256.
+dataset_name: torch_hub_weights
+target_dir: model_cache/torch/hub/checkpoints
+mode: url
+source: https://download.pytorch.org/models
+files:
+  - key: raft_large_C_T_SKHT_V2-ff5fadd5.pth
+    url: "https://download.pytorch.org/models/raft_large_C_T_SKHT_V2-ff5fadd5.pth"
+    size: 21106607
+    checksum: "sha256:ff5fadd56d26b40647388883af1547351ea17868b765c05b27231e72dd16a322"
+  - key: alexnet-owt-7be5be79.pth
+    url: "https://download.pytorch.org/models/alexnet-owt-7be5be79.pth"
+    size: 244408911
+    checksum: "sha256:7be5be791159472b1fbf3c69796f7cb30dca7ad8466c2df70058c37116cdee02"
+  - key: vgg16-397923af.pth
+    url: "https://download.pytorch.org/models/vgg16-397923af.pth"
+    size: 553433881
+    checksum: "sha256:397923af8e79cdbb6a7127f12361acd7a2f83e06b05044ddf496e83de57a5bf0"
+download_parallel_files: 3
+download_connections_per_file: 4
+expected_layout:
+  - {glob: "raft_large_C_T_SKHT_V2-ff5fadd5.pth", min_count: 1}
+  - {glob: "alexnet-owt-7be5be79.pth", min_count: 1}
+  - {glob: "vgg16-397923af.pth", min_count: 1}

@@ -1,0 +1,22 @@
+# @package _global_
+
+baseline_params:
+  name: propagation_baseline
+  initializer: null
+  mode: single_step
+  single_step_target: previous
+
+  propagation:
+    name: coupling
+    params:
+      pretrained_model_dir: null
+      residual_branch: r0
+      use_final_model: true
+      use_ema: true
+      use_epoch: null
+      num_inference_steps: 5  # as in the notebook; 50 steps add a colour offset
+      eta: 0.0
+      scheduler: {}
+      num_samples: 10
+
+sweep: {}
